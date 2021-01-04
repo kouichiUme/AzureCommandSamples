@@ -1,2 +1,9 @@
 # comment 
-az login
+az login --use-device-code
+# strage group
+az group create \
+    --name storage-resource-group \
+    --location westus
+
+
+az keyvault secret show --name "MyPassword" --vault-name $(az keyvault list --query [0].name --output tsv) --query value --output tsv
