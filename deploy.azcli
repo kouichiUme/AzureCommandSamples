@@ -16,9 +16,7 @@ APPLOCATION=$(az appservice plan list --query [0].location --output tsv)
 az webapp up --name $APPNAME --resource-group $APPRG --plan $APPPLAN --sku $APPSKU --location "$APPLOCATION"
 
 
-# 
-az group create --name QuickstartJenkins-rg --location westus2
 
-
+# azure sphere is run another directory ?
 
 

@@ -3,10 +3,25 @@
 #
 # 
 
-az group create --name QuickstartJenkins-rg --location westus2
+# az group create --name QuickstartJenkins-rg --location westus2
 
 jenkinsInitfile=cloud-init-jenkins.txt
 jenkinsVmName=QuickstartJenkins-vm
 
-az vm create --resource-group QuickstartJenkins-rg --name QuickstartJenkins-vm --image UbuntuLTS --admin-username "azureuser" --generate-ssh-keys 
+# learn-7bbd7b68-adff-4ec2-b96c-b922f576be83
+
+az vm create --resource-group learn-7bbd7b68-adff-4ec2-b96c-b922f576be83 --name QuickstartJenkins-vm --image UbuntuLTS --admin-username "azureuser" --generate-ssh-keys 
 --custom-data $jenkinsInitfile
+
+
+
+# nsgを更新する
+az network nsg rule create \
+  --resource-group learn-8ff400d3-0ae7-4385-b071-7e61835a1e0e \
+  --nsg-name my-vmNSG \
+  --name allow-http \
+  --protocol tcp \
+  --priority 100 \
+  --destination-port-range 80 \
+  --access Allow
+

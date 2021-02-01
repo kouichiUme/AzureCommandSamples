@@ -2,20 +2,23 @@
 az login --use-device-code
 
 # storage-resource-group
-$resourcegroupname="storage-resource-group"
+resourcegroupname="storage-resource-group"
 # strage group
 # 
-az group create --name $resourcegroupname --location westus
+#az group create --name $resourcegroupname --location westus
 
 
 az keyvault secret show --name "MyPassword" --vault-name $(az keyvault list --query [0].name --output tsv) --query value --output tsv
 
+#
 az vm create \
   --resource-group learn-8ff400d3-0ae7-4385-b071-7e61835a1e0e \
   --name my-vm \
   --image UbuntuLTS \
   --admin-username azureuser \
   --generate-ssh-keys
+
+
 #create nginx
 az vm extension set \
   --resource-group learn-8ff400d3-0ae7-4385-b071-7e61835a1e0e \
