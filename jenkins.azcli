@@ -1,0 +1,12 @@
+# resrousce name 
+
+#
+# 
+
+az group create --name QuickstartJenkins-rg --location westus2
+
+jenkinsInitfile=cloud-init-jenkins.txt
+jenkinsVmName=QuickstartJenkins-vm
+
+az vm create --resource-group QuickstartJenkins-rg --name QuickstartJenkins-vm --image UbuntuLTS --admin-username "azureuser" --generate-ssh-keys 
+--custom-data $jenkinsInitfile
