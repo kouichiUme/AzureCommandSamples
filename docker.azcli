@@ -1,0 +1,35 @@
+#
+# docker registory ? repository
+#
+dockerRegistoryName=dockerregistory
+webImageName=webimage
+# 
+az acr create --name $dockerRegistoryName --resource-group ubuntu_group --sku standard --admin-enabled true
+
+
+# premium skuのみ
+
+# dockerのサービス名
+# git clone https://github.com/MicrosoftDocs/mslearn-deploy-run-container-app-service.git
+# cd mslearn-deploy-run-container-app-service/dotnet
+# 
+# 
+# --image  docker tagname
+# --file でDockerFileの選定
+# 
+az acr build --registry $dockerRegistoryName --image $webImageName .
+
+# webhook 
+# access
+buildAppTaskName=buildwebapp
+githubAccessToken=
+# dcoker yaml filename? Dockerfile.yml?
+az acr task create --registry $dockerRegistoryName
+--name $buildAppTaskName --image $webImageName \
+--context https://github.com/MicrosoftDocs/mslearn-deploy-run-container-app-service.git \
+--branch master \
+--file Dockerfile \
+--git-access-token $githubAccessToken
+
+
+az acr repository list --name $dockerRegistoryName --output table
