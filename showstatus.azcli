@@ -5,3 +5,9 @@ az account set --subscription "Concierge Subscription"
 
 az account set --subscription "無料試用版"
 # learn-7bbd7b68-adff-4ec2-b96c-b922f576be83
+
+# ?contains(@, 'foo') == `true`
+az account list-locations --query [?contains(displayName, 'Japan') == `true`].[name,displayName] --output tsv
+
+#
+az configure --defaults acr=<registry name>

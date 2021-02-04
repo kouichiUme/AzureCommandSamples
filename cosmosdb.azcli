@@ -1,0 +1,18 @@
+#
+cosmosDbName=cosmos-db
+
+#comosoDbEndpoint = $()
+az cosmosdb create \
+  --resource-group learn-deploy-aci-rg \
+  --name $COSMOS_DB_NAME \
+  --query documentEndpoint \
+  --output tsv
+
+
+az cosmosdb keys list \
+  --resource-group learn-deploy-aci-rg \
+  --name $COSMOS_DB_NAME \
+  --query primaryMasterKey \
+  --output tsv
+
+  

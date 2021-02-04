@@ -1,0 +1,26 @@
+STORAGE_ACCOUNT_NAME=storagaarea
+
+az storage account create \
+  --resource-group learn-deploy-aci-rg \
+  --name $STORAGE_ACCOUNT_NAME \
+  --sku Standard_LRS \
+  --location eastus
+
+export AZURE_STORAGE_CONNECTION_STRING=$(
+    az storage account show-connection-string \
+  --resource-group learn-deploy-aci-rg \
+  --name $STORAGE_ACCOUNT_NAME \
+  --output tsv)
+
+az storage share create --name aci-share-demo
+
+STORAGE_KEY=$(az storage account keys list \
+  --resource-group learn-deploy-aci-rg \
+  --account-name $STORAGE_ACCOUNT_NAME \
+  --query "[0].value" \
+  --output tsv)
+
+
+az storage file list -s aci-share-demo -o table
+
+az storage file download -s aci-share-demo -p <filename>

@@ -3,13 +3,20 @@
 #
 dockerRegistoryName=dockerregistory
 webImageName=webimage
+resourceGroupName=ubuntu_group
+dnsNameLabel=dockerazuresample
+#container docker name
+
+
+
 # 
-az acr create --name $dockerRegistoryName --resource-group ubuntu_group --sku standard --admin-enabled true
+az acr create --name $dockerRegistoryName --resource-group $resourceGroupName --sku standard --admin-enabled true
 
 
 # premium skuのみ
 
-# dockerのサービス名
+# build docker image 
+# 
 # git clone https://github.com/MicrosoftDocs/mslearn-deploy-run-container-app-service.git
 # cd mslearn-deploy-run-container-app-service/dotnet
 # 
@@ -18,6 +25,8 @@ az acr create --name $dockerRegistoryName --resource-group ubuntu_group --sku st
 # --file でDockerFileの選定
 # 
 az acr build --registry $dockerRegistoryName --image $webImageName .
+#
+
 
 # webhook 
 # access
@@ -32,4 +41,94 @@ az acr task create --registry $dockerRegistoryName
 --git-access-token $githubAccessToken
 
 
+# 登録したものをチェック
 az acr repository list --name $dockerRegistoryName --output table
+
+# 
+az acr credential show --name $dockerRegistoryName
+
+# deploy to container
+# username and password are from acr credential
+# from file.yaml
+# az container create --resource-group myResourceGroup --file secure-env.yaml
+az container create \
+    --resource-group $resourceGroupName \
+    --name acr-tasks \
+    --image $dockerRegistoryName.azurecr.io/$webImageName:latest \
+    --registry-login-server $dockerRegistoryName.azurecr.io \
+    --ip-address Public \
+    --location <location> \
+    --registry-username [username] \
+    --registry-password [password]
+# dns 
+    --dns-name-label $dnsNameLabel
+# restart policy
+    --restart-policy OnFailure
+# az container create \
+    --resource-group learn-deploy-aci-rg \
+    --name aci-demo \
+    --image microsoft/azure-vote-front:cosmosdb \
+    --ip-address Public \
+    --location eastus \
+    --environment-variables \
+    COSMOS_DB_ENDPOINT=$COSMOS_DB_ENDPOINT \
+    COSMOS_DB_MASTERKEY=$COSMOS_DB_MASTERKEY
+  --secure-environment-variables \
+    COSMOS_DB_ENDPOINT=$COSMOS_DB_ENDPOINT \
+    COSMOS_DB_MASTERKEY=$COSMOS_DB_MASTERKEY
+
+
+# exec docker run ?
+az container exec --resource-group $resourceGroupName --name $dockerName --exec-command "/bin/bash"
+
+#
+# ipAddress.fqdn
+# ipAddress.ip
+az container show --resource-group  $resourceGroupName --name acr-tasks --query ipAddress.ip --output table
+
+
+# environment variables
+az container show \
+  --resource-group learn-deploy-aci-rg \
+  --name aci-demo \
+  --query containers[0].environmentVariables
+
+
+# containerのログをみる
+az container logs --resource-group learn-deploy-aci-rg  --name mycontainer-restart-demo
+
+
+
+# replication to another location
+az acr replication create --registry $dockerRegistoryName --location japaneast
+
+#
+az acr replication list --registry $dockerRegistoryName --output tsv
+
+# container 
+az container show \
+  --resource-group $resourceGroupName \
+  --name aci-demo \
+  --query ipAddress.ip \
+  --output tsv
+#
+
+  az container create \
+  --resource-group learn-deploy-aci-rg \
+  --name aci-demo-files \
+  --image microsoft/aci-hellofiles \
+  --location eastus \
+  --ports 80 \
+  --ip-address Public \
+  --azure-file-volume-account-name $STORAGE_ACCOUNT_NAME \
+  --azure-file-volume-account-key $STORAGE_KEY \
+  --azure-file-volume-share-name aci-share-demo \
+  --azure-file-volume-mount-path /aci/logs/
+
+
+  az container attach \
+  --resource-group learn-deploy-aci-rg \
+  --name mycontainer
+
+
+  
