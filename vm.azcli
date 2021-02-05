@@ -1,4 +1,5 @@
-resourceGroup=myresourceGroupName
+resourceGroup=learn-56d64252-2280-480e-9552-1c2cd5d3b70e
+vmName=CompVm
 
 # --admin-username 
 # フラグを azureuser 
@@ -8,7 +9,7 @@ resourceGroup=myresourceGroupName
 az vm create \
   --resource-group $resourceGroup \
   --location westus \
-  --name SampleVM \
+  --name $vmName \
   --image UbuntuLTS \
   --admin-username azureuser \
   --generate-ssh-keys \
@@ -17,13 +18,13 @@ az vm create \
 
 # resize 
 az vm list-vm-resize-options \
-    --resource-group learn-18dc8abf-9644-4701-895f-c0adbcaca510 \
-    --name SampleVM \
+    --resource-group $resourceGroupName \
+    --name $vmName \
     --output table
 # 
 az vm resize \
-    --resource-group learn-18dc8abf-9644-4701-895f-c0adbcaca510 \
-    --name SampleVM \
+    --resource-group $resourceGroupName \
+    --name $vmName \
     --size Standard_D2s_v3
 
 
@@ -38,3 +39,30 @@ az vm image list --location japaneast --output table
 #
 az vm list-sizes --location eastus --output table
 
+#
+az vm list-ip-addresses -name $vmName -o table
+#
+az vm show --resource-group $resourceGroupName --name $vmName
+# --query osProfile.adminUsername
+
+az vm stop
+    --name $vmName \
+    --resource-group $resourceGroupName
+
+# power state off ?
+az vm get-instance-view \
+    --name $vmName \
+    --resource-group $resourceGroupName \
+    --query "instanceView.statuses[?starts_with(code, 'PowerState/')].displayStatus" -o tsv
+# vm running
+# vm stopped
+
+# start 
+az vm start \
+    --name $vmName \
+    --resource-group $resourceGroupName
+
+az vm open-port \
+    --port 80 \
+    --resource-group $resourceGroupName \
+    --name $vmName
