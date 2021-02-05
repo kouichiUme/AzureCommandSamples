@@ -106,6 +106,8 @@ az acr replication create --registry $dockerRegistoryName --location japaneast
 az acr replication list --registry $dockerRegistoryName --output tsv
 
 # container 
+# id ipAddress objectの形式知りたいかも
+
 az container show \
   --resource-group $resourceGroupName \
   --name aci-demo \
@@ -130,5 +132,10 @@ az container show \
   --resource-group learn-deploy-aci-rg \
   --name mycontainer
 
+# container id
+# containerId=$(show comand )
+az monitor metrics list \
+  --resource  $containerId\
+  --metric CPUUsage \
+  --output table
 
-  

@@ -1,0 +1,12 @@
+
+az monitor metrics list \
+  --resource  $containerId\
+  --metric CPUUsage \
+  --output table
+
+
+
+az monitor metrics list \
+  --resource $containerId \
+  --metric MemoryUsage \
+  --output table

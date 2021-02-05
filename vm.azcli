@@ -1,0 +1,40 @@
+resourceGroup=myresourceGroupName
+
+# --admin-username 
+# フラグを azureuser 
+# にすることで、管理者アカウント名を指定しています。 
+# これを省略した場合、az vm create コマンドによって 
+# "現在のユーザー名" が使用されます。 アカウントの命名規則は OS によって異なるため、特定の名前を指定する方が安全です。
+az vm create \
+  --resource-group $resourceGroup \
+  --location westus \
+  --name SampleVM \
+  --image UbuntuLTS \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --verbose
+  --size "Standard_DS2_v2"
+
+# resize 
+az vm list-vm-resize-options \
+    --resource-group learn-18dc8abf-9644-4701-895f-c0adbcaca510 \
+    --name SampleVM \
+    --output table
+# 
+az vm resize \
+    --resource-group learn-18dc8abf-9644-4701-895f-c0adbcaca510 \
+    --name SampleVM \
+    --size Standard_D2s_v3
+
+
+# output table
+az vm image list --output tsv
+# type 
+az vm image list --publisher Microsoft --output table --all
+# 
+az vm image list --sku Wordpress --output table --all
+#
+az vm image list --location japaneast --output table
+#
+az vm list-sizes --location eastus --output table
+

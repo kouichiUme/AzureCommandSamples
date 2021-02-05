@@ -11,3 +11,19 @@ az account list-locations --query [?contains(displayName, 'Japan') == `true`].[n
 
 #
 az configure --defaults acr=<registry name>
+
+
+#az vm list --output table
+az vm list
+
+
+# o : output
+# n name
+# g: resourcegroup : g
+az vm list-ip-addresses -n SampleVM -o table
+
+
+#
+
+# cls
+clear
